@@ -199,33 +199,4 @@ PyInstaller 打出的 exe **没有代码签名**，第一次运行会弹
 
 ---
 
-## 一些踩过的坑
-
-### Qt
-
-- **QSS 中 `url()` 必须使用绝对路径和正斜杠**，写成 `:/qt/...` 这类资源路径会报 `Cannot open file`。
-  `theme.asset_path()` 会计算绝对路径，文件不存在时整条规则不输出。
-- **`QWidget { background: ... }` 会污染所有子控件**（包括 QLabel）。背景只加在带 `objectName` 的容器上。
-- **自定义控件改值时要同步内部状态**：`Segmented.set()` 只改视觉，业务侧改值时必须同时更新。
-- **绘制描边圆圈前要 `setBrush(Qt.NoBrush)`**，否则会被填充成实心。
-- **跨线程回调必须用信号**：core 的回调运行在工作线程，统一通过 `QObject` 的 Signal 投递到 UI 线程。
-- **`QFontDatabase` 需要先有 `QApplication`**。
-- **打包后资源路径会变**：PyInstaller `--add-data` 在 onedir 模式下落进 `_internal/`。
-  统一走 `core/config.resource_path()`，依次查 `sys._MEIPASS` → 程序目录 → `程序目录/_internal`。
-- **窗口图标要显式设在窗口上**：只调 `QApplication.setWindowIcon()` 时，已创建窗口的 `windowIcon()` 仍为空。
-
-### 通用
-
-- **绝不能给 `explorer.exe` 传 `CREATE_NO_WINDOW`**：会导致 DLL 初始化失败并弹出
-  「explorer.exe - Application Error (0xc0000142)」。该标志只适用于 ffmpeg 这类控制台程序。
-  `core/osutil.py` 只重定向子进程 stdio，不传任何 creationflags。
-- **`.bat` 文件不要用 UTF-8 编码保存中文**：cmd.exe 按系统 ANSI 码页（简体中文为 GBK）解析 .bat，
-  UTF-8 中文会解码成乱码并使整行错位。`启动.bat` 因此**全文只用 ASCII**。
-- **ffprobe 读不出 TS 的总时长**：`-f concat` 列表对 MPEG-TS 恒返回 `duration=N/A`。
-  改为：m3u8 用 `#EXTINF` 累加；小列表并行逐个探测求和；大列表抽样估算。
-
----
-
-## License
-
 MIT License
