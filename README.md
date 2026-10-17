@@ -2,7 +2,10 @@
 
 简体中文 | [English](README.en.md)
 
-一个界面清爽的 Windows 桌面工具箱，把两件「手很酸」的媒体整理活儿做成一键操作：
+一个界面清爽的 Windows 桌面工具箱，合并了先前的两个项目
+[A_program_for_ts_files_concatenation](https://github.com/Dreaky314/A_program_for_ts_files_concatenation.git)
+[video_rename_and_copy](https://github.com/Dreaky314/video_rename_and_copy.git)
+后续根据需求会增加新功能
 
 - **番剧整理** —— 把按集数分文件夹的番剧视频批量重命名并归档
 - **分片合并** —— 把流媒体缓存的 `.ts` 分片无损拼成一个视频文件
@@ -87,11 +90,13 @@
 | 系统 | Windows 10 / 11（64 位） |
 | Python | 3.9+（开发环境为 3.14.7） |
 | ffmpeg | 仅在「分片合并」时需要 |
+（运行已编译的.exe时不需要）
 
 ### 安装与运行
 
-**推荐双击 `启动.bat` 启动。** 它用项目内 `.venv` 的 `pythonw` 跑 `app_qt.py`，
-不经过 exe，因此**不会触发 SmartScreen 拦截**。
+**双击.exe即可**
+
+**备选双击 `启动.bat` 启动。**
 
 首次需要先创建虚拟环境：
 
@@ -108,27 +113,6 @@ python -m venv --without-pip --system-site-packages .venv
 ```bat
 .venv\Scripts\pythonw.exe app_qt.py
 ```
-
----
-
-## 技术栈
-
-| 层次 | 选型 | 说明 |
-| --- | --- | --- |
-| 界面 | PySide6（Qt 6） | 矢量抗锯齿绘制 + 合成，高 DPI 由 Qt 自动处理 |
-| 样式 | QSS | 集中管理调色板与控件样式 |
-| 逻辑 | 纯 Python 标准库 | `core/` 不依赖任何界面库，可单独调用 |
-
-之所以从 Tkinter 换成 Qt，是因为 Tk 在 Windows 上缩放窗口的耗时几乎全在整窗重绘上。
-同一台 150% 缩放的机器上实测：
-
-| | Tkinter | Qt |
-| --- | --- | --- |
-| 番剧整理页缩放 | 231 ms/步 | **17.4 ms/步** |
-| 分片合并页缩放 | 142 ms/步 | **18.7 ms/步** |
-| 最大化 | 266 ms | **47 ms** |
-
----
 
 ## 目录结构
 
