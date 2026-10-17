@@ -171,7 +171,7 @@ python tools\e2e_merge_test.py     :: 真实 ffmpeg 端到端
 .venv\Scripts\python.exe build_exe.py
 ```
 
-产物位于 `dist/影音工具箱/`，约 **97 MB**（含 Qt 运行库，已排除 WebEngine 等无用模块）。
+产物位于 `dist/影音工具箱/`。
 
 ffmpeg 体积较大（约 100 MB/个），默认**不**打包，程序会在系统 PATH 中查找。
 需要一起打包时：
